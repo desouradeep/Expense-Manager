@@ -2,7 +2,7 @@
 EXPENSE MANAGER
 ===============
 
-An easy to use, clean looking expense manager which will help you in tracking your daily/monthly expenses efficiently.
+An easy to use, clean looking expense manager which will help you to track your daily/monthly expenses efficiently.
 
 
 LIBRARIES USED:
