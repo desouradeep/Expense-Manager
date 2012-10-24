@@ -151,7 +151,7 @@ class newEntry:
     try:
       self.w.destroy()
     except AttributeError:
-      print ''
+      pass
     self.window.destroy()
     gtk.main_quit()
 #newEntry()

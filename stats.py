@@ -13,11 +13,12 @@ with b.suppress_output(sys.stderr):
 
 window=gtk.Window()
 def main(self,fname):
-	
+    
+    
     treeView = gtk.TreeView()    
     window.set_default_size(200,225)
     window.set_position(gtk.WIN_POS_CENTER)
-    window.connect("delete_event",terminate)
+    window.connect("destroy",terminate)
     window.set_title(fname[10:]+' '+fname[5:9]+" STATS")
     update(fname)
     store = create_model(self)    
@@ -50,7 +51,7 @@ def update(fname):
       if data[5][0]=='---TOTAL---':
 	del data[-1]
     except IndexError:
-      print ''
+      pass
       
     #print fname
     f=open(fname,'r')
@@ -97,8 +98,9 @@ def create_columns(self,treeView):
         treeView.append_column(column)
         
         
-def terminate(W):
+def terminate(w):
     window.destroy()
+    #gtk.main_quit()
         
 #main(self)
 #gtk.main()        
