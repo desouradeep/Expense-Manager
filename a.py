@@ -12,7 +12,7 @@ def main(self):
     treeView = gtk.TreeView()    
     window.set_default_size(400,200)
     window.set_position(gtk.WIN_POS_CENTER)
-    window.connect("delete_event",terminate)
+    window.connect("destroy",terminate)
     window.set_title("Viewer")
         
     store = create_model_side(self)    
