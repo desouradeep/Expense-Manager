@@ -2,6 +2,7 @@
 from matplotlib.figure import Figure
 import auto
 import sys
+import os
 import newEntry
 import b
 import a
@@ -91,6 +92,12 @@ class app:
       
         self.yy='2012'
         a= widget.get_active_text()
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+	dest_dir = os.path.join(script_dir, 'data')
+	try:
+	    os.makedirs(dest_dir)
+	except OSError:
+	    pass 
         self.fname='data/'+self.yy+'_'+a
         #print self.fname
         f=open(self.fname,'a')
