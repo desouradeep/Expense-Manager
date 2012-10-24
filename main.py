@@ -1,5 +1,4 @@
 #!/usr/bin/python
-from matplotlib.figure import Figure
 import auto
 import sys
 import os
@@ -9,8 +8,7 @@ import a
 import stats
 import datetime
 with b.suppress_output(sys.stderr):
-    import gtk
-    from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
+    import gtk    
 
 class app:
     
