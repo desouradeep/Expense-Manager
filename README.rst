@@ -15,3 +15,7 @@ LIBRARIES USED:
 5. time
 6. contextlib
 
+EXECUTION:
+----------
+
+Execute main.py to launch the program.

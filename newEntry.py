@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import datetime
-import b
+import bugfix
 import sys
 import time
 import sort_file
-with b.suppress_output(sys.stderr):
+with bugfix.suppress_output(sys.stderr):
     import gtk
 
     

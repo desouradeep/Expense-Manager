@@ -5,10 +5,10 @@ data=[['ENTR',0],
       ['OTHERS',0],
       ['TRANSPORT',0]]
       
-import b
+import bugfix
 import sys
 
-with b.suppress_output(sys.stderr):
+with bugfix.suppress_output(sys.stderr):
     import gtk
 
 window=gtk.Window()

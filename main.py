@@ -1,13 +1,13 @@
 #!/usr/bin/python
-import auto
+import update_list
 import sys
 import os
 import newEntry
-import b
-import a
+import bugfix
+import viewer
 import stats
 import datetime
-with b.suppress_output(sys.stderr):
+with bugfix.suppress_output(sys.stderr):
     import gtk    
 
 class app:
@@ -104,7 +104,7 @@ class app:
         x=f.readlines()
         f.close()
         #print 1
-        auto.main(self.fname)
+        update_list.main(self.fname)
         
         try:
 	  self.treeView.set_model(self.create_model())
@@ -120,7 +120,7 @@ class app:
       
     def create_model(self):
         store = gtk.ListStore( str, int, int, int, int, int, int)
-	for a in auto.z:
+	for a in update_list.z:
             store.append([a[0], a[1], a[2], a[3], a[4], a[5], a[6]])
 	   
         return store
@@ -171,8 +171,8 @@ class app:
       model=widget.get_model()
       x='data/2012_'+ model[row][0]
       #print x
-      a.update(self,x)
-      a.main(self)
+      viewer.update(self,x)
+      viewer.main(self)
     
     def stats(self,widget):
       stats.main(self,self.fname)
