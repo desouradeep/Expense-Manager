@@ -1,5 +1,18 @@
 #!/usr/bin/env python
+import datetime
 z=[]
+def leap(yy):	
+	
+	if yy%400 == 0:
+	  return True
+	elif yy%100 == 0:
+	  return False
+	elif yy%4 == 0: 
+	  return True
+	else:
+	  return False  
+	  
+	
 def main(fname):
 	#fname='data/2012_OCT'
 	f=open(fname)
@@ -19,6 +32,10 @@ def main(fname):
 	months=["JAN",'FEB','MAR','APR','MAY','JUNE','JULY','AUG','SEPT','OCT','NOV','DEC']
 	nd=0
 	
+	yy=int(fname[5:9])
+	if leap(yy)==False:
+	    ndays[1]=ndays[1]-1
+	  
 	for i in range(0,12):
 	  if months[i]==mm:
 	    nd=ndays[i]
