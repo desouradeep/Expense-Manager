@@ -92,6 +92,8 @@ class app:
     def select_years(self):
 	#this method selects the years to be stored in the years combobox	
 	liststore2 = gtk.ListStore(str)
+	f=open('data/years','a')
+	f.close()
 	f=open('data/years','r')
 	yrs=f.readlines()
 	f.close()
