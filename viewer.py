@@ -42,13 +42,15 @@ def update(self,x):
 	    del data[-1]
     
     fname=x[0:-3]
-    
+    #print x
     
     s=x.find('_')
     s=x[s+1:]
     f=open(fname,'r')
     lines=f.readlines()
     f.close()
+    #print lines
+    #print s,
     for i in lines:
       if i.find(s)==0:
 	a=['','',0,'']

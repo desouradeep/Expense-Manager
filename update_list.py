@@ -78,8 +78,6 @@ def main(fname):
 		for x in range(1,6):
 		  z[i-1][6]+=z[i-1][x]
 		break
-	#for i in z:
-	   # print i
 	
 	 
 #main()

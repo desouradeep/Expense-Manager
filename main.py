@@ -2,11 +2,13 @@
 import update_list
 import sys
 import os
+import clean_database
 import newEntry
 import bugfix
 import viewer
 import stats
 import datetime
+import edit
 with bugfix.suppress_output(sys.stderr):
     import gtk    
 
@@ -23,10 +25,12 @@ class app:
 	
 	hbox = gtk.HBox()
 	button1 = gtk.Button("EDIT")
-	#button1.connect('clicked',self.edit)
+	button1.connect('clicked',self.edit)
+	
 	button2 = gtk.Button("UPDATE")
 	button2.connect('clicked',self.gocl)
 	button3 = gtk.Button("STATS")
+	
 	
 	
 	#liststore for months
@@ -83,12 +87,26 @@ class app:
         self.create_columns(self.treeView)
         
         self.window.add(vbox)
-        
-        
-        
         self.window.show_all()
     
-    
+    def edit(self,widget):
+	self.treeView.set_model(self.create_model())
+	model=self.treeView.get_model()
+	edit.edit(self.fname)
+	#print 1
+	
+	update_list.main(self.fname)
+	  
+	self.treeView.set_model(self.create_model())
+	model=self.treeView.get_model()
+	'''print 1
+	for i in model:
+	    for j in i:
+	      print j,
+	    print
+	print 2
+        '''
+        
     def select_years(self):
 	#this method selects the years to be stored in the years combobox	
 	liststore2 = gtk.ListStore(str)
@@ -97,7 +115,7 @@ class app:
 	f=open('data/years','r')
 	yrs=f.readlines()
 	f.close()
-	print 1
+	#print 1
 	x=0
 	y=0
 	for i in yrs:
@@ -106,9 +124,9 @@ class app:
 	    x=x+1
 	    if int(i)==self.yy:
 	      y=x
-	      print y
+	      #print y
 	    liststore2.append([i])
-	print yrs
+	#print yrs
 
         cell = gtk.CellRendererText()
         self.combobox2 = gtk.ComboBox(liststore2)
@@ -129,6 +147,7 @@ class app:
         #creates a folder named data to store database in case data/ doesnt exist.
         script_dir = os.path.dirname(os.path.abspath(__file__))
 	dest_dir = os.path.join(script_dir, 'data')	
+	#print type(dest_dir), dest_dir
 	try:
 	    os.makedirs(dest_dir)
 	except OSError:
@@ -179,6 +198,8 @@ class app:
         #print 1
 	  update_list.main(self.fname)
         except AttributeError:
+	  f=open('data/'+str(self.yy)+'_'+str(self.months[self.mm]),'a')
+	  f.close()
 	  update_list.main('data/'+str(self.yy)+'_'+self.combobox.get_active_text())
 	  pass
 	
@@ -257,6 +278,7 @@ class app:
       stats.main(self,self.fname)
 	  
     def terminate(self,a,r):
+	clean_database.clean()
         sys.exit(0)
 app()
 gtk.main()
