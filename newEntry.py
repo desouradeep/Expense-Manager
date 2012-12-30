@@ -112,7 +112,7 @@ class newEntry:
       f=open(fname,'a')
       f.write(ss+'\n')
       f.close()
-      print fname
+      #print fname
       
       f=open('data/years','r')
       yrs=f.readlines()

@@ -115,6 +115,15 @@ class app:
 	f=open('data/years','r')
 	yrs=f.readlines()
 	f.close()
+	if len (yrs)==0:
+	  #print 1
+	  f=open('data/years','a')
+	  f.write(str(self.yy)+'\n')
+	  f.close()
+	f=open('data/years','r')
+	yrs=f.readlines()
+	f.close()
+	
 	#print 1
 	x=0
 	y=0
@@ -187,8 +196,7 @@ class app:
 	#creates a file(if not present) and opens it and reads its contents
 	
         try:
-	  #print type(self.combobox2.get_active_text())
-          self.fname='data/'+self.combobox2.get_active_text()+'_'+a
+	  self.fname='data/'+self.combobox2.get_active_text()+'_'+a
           #print self.fname
 	  f=open(self.fname,'a')
 	  f.close()
