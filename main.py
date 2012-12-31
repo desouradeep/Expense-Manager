@@ -65,6 +65,13 @@ class app:
 	  f=open('data/years','r')
 	  f.close()
 	except :
+	  script_dir = os.path.dirname(os.path.abspath(__file__))
+	  dest_dir = os.path.join(script_dir, 'data')	
+	  #print type(dest_dir), dest_dir
+	  try:
+	      os.makedirs(dest_dir)
+	  except OSError:
+	      pass 
 	  f=open('data/years','w')
 	  f.write(str(self.yy)+'\n')
 	  f.close()
