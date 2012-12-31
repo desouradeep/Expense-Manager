@@ -61,6 +61,15 @@ class app:
 	self.dd=now.day
 	self.yy=now.year
 	
+	try:
+	  f=open('data/years','r')
+	  f.close()
+	except :
+	  f=open('data/years','w')
+	  f.write(str(self.yy)+'\n')
+	  f.close()
+	  
+	
 	#hbox.add(button1)
 	hbox.pack_start(button2,False)
 	hbox.pack_start(button3,False)
@@ -203,7 +212,7 @@ class app:
 	    pass 	  
 	
 	#creates a file(if not present) and opens it and reads its contents
-	
+	#self.select_years()
         try:
 	  #print type(self.combobox2.get_active_text())
           self.fname='data/'+self.combobox2.get_active_text()+'_'+a
