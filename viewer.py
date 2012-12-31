@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 data=[]
 import bugfix
 import sys

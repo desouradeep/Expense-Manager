@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 import datetime
 import bugfix
 import sys

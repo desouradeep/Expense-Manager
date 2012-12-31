@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import sys
 def main(s):
   #print s,type(s)
