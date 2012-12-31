@@ -27,7 +27,7 @@ def main(self):
     treeView.set_rules_hint(True)
     sw.add(treeView)
     
-    button=gtk.Button('OK')
+    button=gtk.Button('OK',stock=gtk.STOCK_OK)
     button.connect('clicked',terminate)
     vbox=gtk.VBox()
     vbox.pack_start(sw)

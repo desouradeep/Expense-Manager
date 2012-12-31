@@ -48,10 +48,10 @@ class newEntry:
     
     
     table2=gtk.Table(1,3,True)
-    button=gtk.Button('Done')
+    button=gtk.Button('OK',gtk.STOCK_OK)
     button.connect("clicked", self.terminate)
     table2.attach(button,1,2,0,1)
-    button=gtk.Button('Update')
+    button=gtk.Button('add',gtk.STOCK_ADD)
     button.connect("clicked", self.verify,entry1,entry2,combobox2)
     table2.attach(button,2,3,0,1)
     
@@ -149,7 +149,7 @@ class newEntry:
       self.w.set_title('ERROR!!!')
       vbox=gtk.VBox()
       vbox.pack_start(label)
-      b=gtk.Button('OK')
+      b=gtk.Button('OK',stock=gtk.STOCK_OK)
       b.connect('clicked',self.des)
       vbox.pack_start(b,False)
       self.w.add(vbox)

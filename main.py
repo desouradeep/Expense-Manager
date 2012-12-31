@@ -24,12 +24,12 @@ class app:
 	vbox = gtk.VBox(False)
 	
 	hbox = gtk.HBox()
-	button1 = gtk.Button("EDIT")
+	button1 = gtk.Button("EDIT",stock=gtk.STOCK_EDIT)
 	button1.connect('clicked',self.edit)
 	
-	button2 = gtk.Button("UPDATE")
+	button2 = gtk.Button("UPDATE",stock=gtk.STOCK_ADD)
 	button2.connect('clicked',self.gocl)
-	button3 = gtk.Button("STATS")
+	button3 = gtk.Button("Statistics")
 	
 	
 	
@@ -69,7 +69,13 @@ class app:
 	self.select_years()
 	hbox.pack_start(self.combobox,False)
 	hbox.pack_start(self.combobox2,False)
+	button5=gtk.Button(stock=gtk.STOCK_ABOUT)
+	button5.connect('clicked',self.about)
+	#hbox.pack_end(button5,False)
 	vbox.pack_start(hbox, False)
+	hbox2=gtk.HBox()
+	hbox2.pack_end(button5,False)
+	vbox.pack_end(hbox2,False)
 	
 	sw = gtk.ScrolledWindow()
 	sw.set_shadow_type(gtk.SHADOW_ETCHED_IN)
@@ -88,6 +94,18 @@ class app:
         
         self.window.add(vbox)
         self.window.show_all()
+    
+    def about(self,widget):
+	dialog = gtk.AboutDialog()
+        dialog.set_name('Expense-Manager')
+        dialog.set_copyright('(c) 2013 Souradeep De')
+        dialog.set_website('http://github.com/desouradeep/Expense-Manager')
+        #dialog.set_website_label('http://desouradeep.wordpress.com')
+        dialog.set_authors(['Souradeep De \n email: <souradeep.2011@gmail.com> \n blog: http://desouradeep.wordpress.com'])
+        dialog.set_program_name('Expense-Manager')
+        dialog.set_version('0.1')
+        dialog.run()
+        dialog.destroy()
     
     def edit(self,widget):
 	self.treeView.set_model(self.create_model())
@@ -115,15 +133,6 @@ class app:
 	f=open('data/years','r')
 	yrs=f.readlines()
 	f.close()
-	if len (yrs)==0:
-	  #print 1
-	  f=open('data/years','a')
-	  f.write(str(self.yy)+'\n')
-	  f.close()
-	f=open('data/years','r')
-	yrs=f.readlines()
-	f.close()
-	
 	#print 1
 	x=0
 	y=0
@@ -196,7 +205,8 @@ class app:
 	#creates a file(if not present) and opens it and reads its contents
 	
         try:
-	  self.fname='data/'+self.combobox2.get_active_text()+'_'+a
+	  #print type(self.combobox2.get_active_text())
+          self.fname='data/'+self.combobox2.get_active_text()+'_'+a
           #print self.fname
 	  f=open(self.fname,'a')
 	  f.close()

@@ -18,7 +18,7 @@ class edit:
     self.window.set_title(self.fname[5:9]+' '+self.fname[10:]+' RECORDS')
     
    
-    button2=gtk.Button('  DELETE  ')
+    button2=gtk.Button(stock=gtk.STOCK_DELETE)
     button2.connect('clicked', self.confirm_delete)
     
     hbox=gtk.HBox()
@@ -41,7 +41,7 @@ class edit:
     vbox.pack_start(sw)
     
     hbox2=gtk.HBox()
-    button3=gtk.Button('      DONE      ')
+    button3=gtk.Button('APPLY',gtk.STOCK_OK)
     button3.connect('clicked',self.terminate)
     hbox2.pack_start(button3)
     
@@ -157,9 +157,9 @@ class edit:
    if len(self.checked) > 0:
     self.window2=gtk.Window()
     label=gtk.Label('\n        Are you sure you want to delete these records?        \n')
-    button_yes=gtk.Button('        YES        ')
+    button_yes=gtk.Button('YES',stock=gtk.STOCK_YES)
     button_yes.connect('clicked',self.delete)
-    button_no=gtk.Button('        NO        ')
+    button_no=gtk.Button('NO',stock=gtk.STOCK_NO)
     button_no.connect('clicked',self.des)
     
     hbox=gtk.HBox()
@@ -177,6 +177,10 @@ class edit:
     self.window2.show_all()
     
   def terminate(self,w):
+    try:
+      self.des(w)
+    except AttributeError:
+      pass
     self.window.destroy()    
     gtk.main_quit()
     
