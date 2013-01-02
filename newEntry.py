@@ -22,9 +22,9 @@ class newEntry:
     table=gtk.Table(3,2,True)
     
     
-    label=gtk.Label('TYPE	   	    ')
+    label=gtk.Label('TYPE *  		    ')
     table.attach(label,0,1,0,1)
-    label=gtk.Label('COST	 	    ')
+    label=gtk.Label('COST *		    ')
     table.attach(label,0,1,1,2)
     label=gtk.Label('DESCRIPTION   ')
     table.attach(label,0,1,2,3)
@@ -73,11 +73,13 @@ class newEntry:
     #Method to destroy nwe entry window
     self.window.destroy()
     
-  def des(self,a):
+  def des_w(self,a):
     #method to destroy notification window
     self.w.destroy()
-    
   
+  def des_confirmation_window(self,a):
+    self.confirmation_window.destroy()
+    
   def item(self,widget):
     self.cat=widget.get_active_text()
     #print self.cat
@@ -121,7 +123,20 @@ class newEntry:
       for i in yrs:
 	if i[0:-1]== str(self.yy):
 	  flag=1
-
+      
+      self.confirmation_window=gtk.Window()
+      #self.confirmation_window.set_default_size(200,100)
+      self.confirmation_window.set_position(gtk.WIN_POS_CENTER)
+      self.confirmation_window.set_title('SUCCESS')
+      label=gtk.Label('\n\t Data successfully updated.\t \n')
+      button=gtk.Button(stock=gtk.STOCK_OK)
+      button.connect('clicked',self.des_confirmation_window)
+      vbox=gtk.VBox()
+      vbox.pack_start(label)
+      vbox.pack_end(button,False)
+      self.confirmation_window.add(vbox)
+      self.confirmation_window.show_all()
+      
       if flag==0:
 	f=open('data/years','a')
 	f.write(str(self.yy)+'\n')
@@ -137,9 +152,10 @@ class newEntry:
 	#main.app.select_years(self)
       #s='data/2012_OCT'
       sort_file.main(fname)
-      time.sleep(0.5)
-      
-      
+      #time.sleep(0.5)
+      entry1.set_text('')
+      entry2.set_text('')
+
 	
     else:
       #if not valid, displays a notification window w
@@ -150,7 +166,7 @@ class newEntry:
       vbox=gtk.VBox()
       vbox.pack_start(label)
       b=gtk.Button('OK',stock=gtk.STOCK_OK)
-      b.connect('clicked',self.des)
+      b.connect('clicked',self.des_w)
       vbox.pack_start(b,False)
       self.w.add(vbox)
       self.w.show_all()
@@ -180,6 +196,7 @@ class newEntry:
     #newEntry.self.window.destroy()
     try:
       self.w.destroy()
+      self.confirmation_window.destroy()
     except AttributeError:
       pass
     self.window.destroy()
