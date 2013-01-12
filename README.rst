@@ -5,7 +5,7 @@ EXPENSE MANAGER
 An easy to use, clean looking expense manager which will help you to track your daily/monthly expenses efficiently.
 
 
-LIBRARIES USED:
+DEPENDENCIES:
 ---------------
 
 1. gtk
