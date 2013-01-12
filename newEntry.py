@@ -48,7 +48,7 @@ class newEntry:
     
     
     table2=gtk.Table(1,3,True)
-    button=gtk.Button('OK',gtk.STOCK_OK)
+    button=gtk.Button('OK',gtk.STOCK_GO_BACK)
     button.connect("clicked", self.terminate)
     table2.attach(button,1,2,0,1)
     button=gtk.Button('add',gtk.STOCK_ADD)

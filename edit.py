@@ -17,7 +17,6 @@ class edit:
     self.window.connect("destroy",self.terminate)
     self.window.set_title(self.fname[5:9]+' '+self.fname[10:]+' RECORDS')
     
-   
     button2=gtk.Button(stock=gtk.STOCK_DELETE)
     button2.connect('clicked', self.confirm_delete)
     
@@ -53,6 +52,7 @@ class edit:
     self.window.show_all() 
     gtk.main()
     
+ 
   def update(self):
     
     for i in range(0,len(data)):
@@ -128,6 +128,7 @@ class edit:
 	f=open(self.fname,'r')
 	records=f.readlines()
 	f.close()
+	#print self.checked
 	for i in range(0,len(self.checked)):
 	    #print self.checked,'3'
 	    del self.store[self.checked[i]]
