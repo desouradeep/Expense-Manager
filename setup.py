@@ -9,7 +9,7 @@ setup(name='Expense-Manager',
       url='http://github.com/desouradeep/Expense-Manager',
       license = 'http://www.gnu.org/copyleft/gpl.html',
       data_files=[('/usr/share/applications',['expense-manager.desktop']),
-	('/usr/bin',['expensemanager']),
+	('/usr/bin',['expense-manager']),
 	('/usr/share/pixmaps',['icons/expense-manager.png']),
 	('/usr/share/expense-manager',['bugfix.py','clean_database.py','edit.py','main.py','newEntry.py','stats.py','sort_file.py','update_list.py','viewer.py'])]
       
