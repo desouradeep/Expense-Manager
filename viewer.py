@@ -6,35 +6,17 @@ import sys
 with bugfix.suppress_output(sys.stderr):
     import gtk
 
-window=gtk.Window()
+treeView = gtk.TreeView()    
 def main(self):
 	
-    treeView = gtk.TreeView()    
-    window.set_default_size(400,200)
-    window.set_position(gtk.WIN_POS_CENTER)
-    window.connect("destroy",terminate)
-    window.set_title("Viewer")
-        
-    store = create_model_side(self)    
-    treeView = gtk.TreeView(store)
+    
+       
+    store = create_model(self)    
+    treeView.set_model(store)
+    treeView.set_rules_hint(True)    
+    create_columns(self,treeView)
+    
     treeView.set_rules_hint(True)
-    
-    create_columns_side(self,treeView)
-    
-    sw = gtk.ScrolledWindow()
-    sw.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-    sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)     
-    treeView.set_rules_hint(True)
-    sw.add(treeView)
-    
-    button=gtk.Button('OK',stock=gtk.STOCK_OK)
-    button.connect('clicked',terminate)
-    vbox=gtk.VBox()
-    vbox.pack_start(sw)
-    vbox.pack_start(button,False)
-    window.add(vbox)
-    window.show_all()
-    
     
 def update(self,x):
     
@@ -46,60 +28,66 @@ def update(self,x):
     
     s=x.find('_')
     s=x[s+1:]
-    f=open(fname,'r')
-    lines=f.readlines()
-    f.close()
-    #print lines
-    #print s,
-    for i in lines:
-      if i.find(s)==0:
-	a=['','',0,'']
-	a[0]=i[0:7]
-	a[1]=i[7:17].strip()
-	a[2]=int(float(i[17:24].strip()))
-	a[3]=i[24:].strip()
-	data.append(a)
-	#print a,
-	#print i[7:],
-    
+    try:
+      f=open(fname,'r')
+      lines=f.readlines()
+      f.close()
+      #print lines
+      #print s,
+      for i in lines:
+	if i.find(s)==0:
+	  a=['','','',0,'']
+	  a[0]=i[0:7]
+	  a[1]=fname[5:9]
+	  a[2]=i[7:17].strip()
+	  a[3]=int(float(i[17:24].strip()))
+	  a[4]=i[24:].strip()
+	  data.append(a)
+	  #print a,
+	  #print i[7:],
+    except IOError:
+      pass
+    #print data
 
-def create_model_side(self):
+def create_model(self):
 	
-        store = gtk.ListStore( str, str, int, str)
+        store = gtk.ListStore( str, str, str, int, str)
 	
-	
+	#print data
         for a in data:
-	    
-            store.append([a[0], a[1], a[2],a[3]])
+	    #print a
+            store.append([a[0], a[1], a[2], a[3], a[4]])
 	
         return store
         
         
-def create_columns_side(self,treeView):    
-	
-	
+def create_columns(self,treeView):   	
         rendererText = gtk.CellRendererText()
         column = gtk.TreeViewColumn("DATE", rendererText, text=0)
         column.set_sort_column_id(0)    
         treeView.append_column(column)
         
         rendererText = gtk.CellRendererText()
-        column = gtk.TreeViewColumn("TYPE", rendererText, text=1)
+        column = gtk.TreeViewColumn("YEAR", rendererText, text=1)
         column.set_sort_column_id(1)    
         treeView.append_column(column)
         
         rendererText = gtk.CellRendererText()
-        column = gtk.TreeViewColumn("COST", rendererText, text=2)
-        column.set_sort_column_id(2)
+        column = gtk.TreeViewColumn("TYPE", rendererText, text=2)
+        column.set_sort_column_id(2)    
         treeView.append_column(column)
         
         rendererText = gtk.CellRendererText()
-        column = gtk.TreeViewColumn("DESCRIPTION", rendererText, text=3)
+        column = gtk.TreeViewColumn("COST", rendererText, text=3)
         column.set_sort_column_id(3)
         treeView.append_column(column)
         
-def terminate(self):
-    window.destroy()
+        rendererText = gtk.CellRendererText()
+        column = gtk.TreeViewColumn("DESCRIPTION", rendererText, text=4)
+        column.set_sort_column_id(4)
+        treeView.append_column(column)
+        
+
         
 #main(self)
 #gtk.main()        

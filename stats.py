@@ -11,36 +11,18 @@ import sys
 with bugfix.suppress_output(sys.stderr):
     import gtk
 
-window=gtk.Window()
+treeView = gtk.TreeView()
 def main(self,fname):
     
     
-    treeView = gtk.TreeView()    
-    window.set_default_size(200,225)
-    window.set_position(gtk.WIN_POS_CENTER)
-    window.connect("destroy",terminate)
-    window.set_title(fname[10:]+' '+fname[5:9]+" STATS")
+        
+    #window.set_title(fname[10:]+' '+fname[5:9]+" STATS")
     update(fname)
     store = create_model(self)    
-    treeView = gtk.TreeView(store)
+    treeView.set_model(store)
     treeView.set_rules_hint(True)
     
     create_columns(self,treeView)
-    
-    sw = gtk.ScrolledWindow()
-    sw.set_shadow_type(gtk.SHADOW_ETCHED_IN)
-    sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)     
-    treeView.set_rules_hint(True)
-    sw.add(treeView)
-    
-    button=gtk.Button('OK',stock=gtk.STOCK_OK)
-    button.connect('clicked',terminate)
-    vbox=gtk.VBox()
-    vbox.pack_start(sw)
-    vbox.pack_start(button,False)
-    window.add(vbox)
-    window.show_all()
-    
     
 def update(fname):
     
@@ -98,9 +80,3 @@ def create_columns(self,treeView):
         treeView.append_column(column)
         
         
-def terminate(w):
-    window.destroy()
-    #gtk.main_quit()
-        
-#main(self)
-#gtk.main()        

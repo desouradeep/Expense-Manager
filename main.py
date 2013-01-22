@@ -1,4 +1,4 @@
-#!/usr/bin/python
+    #!/usr/bin/python
 import update_list
 import sys
 import os
@@ -9,6 +9,10 @@ import viewer
 import stats
 import datetime
 import edit
+import matplotlib
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
+
 with bugfix.suppress_output(sys.stderr):
     import gtk    
 
@@ -16,10 +20,11 @@ class app:
     
     def __init__(self):
         self.window=gtk.Window()
-        self.window.set_default_size(600,500)
+        self.window.set_default_size(1220,658)
         self.window.set_position(gtk.WIN_POS_CENTER)
         self.window.connect("delete_event",self.terminate)
         self.window.set_title("Expense Manager")
+	
 	
 	vbox = gtk.VBox(False)
 	
@@ -29,7 +34,6 @@ class app:
 	
 	button2 = gtk.Button("UPDATE",stock=gtk.STOCK_ADD)
 	button2.connect('clicked',self.gocl)
-	button3 = gtk.Button("Statistics")
 	
 	
 	
@@ -53,13 +57,10 @@ class app:
         self.combobox.set_active(self.mm)
         a= self.combobox.get_active_text()
         self.fname='data/'+str(self.yy)+'_'+a
-	button3.connect('clicked',self.stats)
+
 	
 	
-	now=datetime.datetime.now()
-	self.mm=now.month-1
-	self.dd=now.day
-	self.yy=now.year
+	
 	
 	try:
 	  f=open('data/years','r')
@@ -79,19 +80,18 @@ class app:
 	
 	#hbox.add(button1)
 	hbox.pack_start(button2,False)
-	hbox.pack_start(button3,False)
 	hbox.pack_start(button1,False)
 	#hbox.add(button4)
 	self.select_years()
-	hbox.pack_start(self.combobox,False)
-	hbox.pack_start(self.combobox2,False)
+	hbox.pack_end(self.combobox2,False)
+	hbox.pack_end(self.combobox,False)
 	button5=gtk.Button(stock=gtk.STOCK_ABOUT)
 	button5.connect('clicked',self.about)
-	#hbox.pack_end(button5,False)
-	vbox.pack_start(hbox, False)
+	#hbox.pack_end(buttmon5,False)
+	vbox.pack_start(hbox, False)	#hbox contains the add/stats/edit etc buttons/comboboxes
 	hbox2=gtk.HBox()
-	hbox2.pack_end(button5,False)
-	vbox.pack_end(hbox2,False)
+	hbox2.pack_end(button5,False) 	#button5 is the about button
+	vbox.pack_end(hbox2,False)	#hbox2 holds only the about button
 	
 	sw = gtk.ScrolledWindow()
 	sw.set_shadow_type(gtk.SHADOW_ETCHED_IN)
@@ -103,13 +103,255 @@ class app:
         self.treeView = gtk.TreeView(store)
         #tvc=gtk.TreeViewColumn()
         self.treeView.set_rules_hint(True)
-        self.treeView.connect('row-activated',self.on_activated)
-        sw.add(self.treeView)
-	vbox.pack_start(sw,550)
+        self.treeView.connect('cursor-changed',self.on_activated)
+        sw.add(self.treeView)	
+        
+        
+	pane=gtk.HPaned()
+	pane.pack1(sw)#,resize=True, shrink=True)
+	
+	#self.sw_graphs=gtk.ScrolledWindow()
+	#self.sw_graphs.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+	#self.sw_graphs.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)     
+	
+	
+	self.f = plt.figure(dpi=75,facecolor='w')
+	#self.f.patch.set_alpha(0.95)
+	self.f.subplots_adjust(left = 0.08,bottom=0.1,top = 0.9,right=0.95,wspace=0.25,hspace=0.25)
+	self.canvas = FigureCanvas(self.f)
+	
+	self.line1=[]
+	self.line1b=[]
+	self.line2=[]
+	
+	self.graphs(1)
+	self.graphs(2)
+	
+	
+	#self.sw_graphs.add_with_viewport(self.canvas)
+	
+	frame=gtk.Frame()
+	frame.add(self.canvas)
+	
+	pane_rightPane=gtk.VPaned()
+	pane_stats_viewer=gtk.HPaned()
+
+	
+	
+	
+	viewer_sw = gtk.ScrolledWindow()
+	viewer_sw.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+	viewer_sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)     
+	viewer_sw.add(viewer.treeView)
+	
+	x='data/'+str(self.yy)+'_'+ str(self.months[self.mm])+' '+str(self.dd)
+	#print x
+	viewer.update(self,x)
+	viewer.main(self)
+	
+	stats_sw = gtk.ScrolledWindow()
+	
+	stats_sw.set_shadow_type(gtk.SHADOW_ETCHED_IN)
+	stats_sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)   
+	stats.main(self,self.fname)
+	stats_sw.add(stats.treeView)
+	
+	
+	pane_stats_viewer.add1(stats_sw)
+	pane_stats_viewer.set_position(182)
+	pane_stats_viewer.add2(viewer_sw)
+	
+	pane_rightPane.add1(frame)
+	pane_rightPane.set_position(390)
+	pane_rightPane.add2(pane_stats_viewer)
+	
+	
+	pane.pack2(pane_rightPane,resize=True, shrink=False)
+	pane.set_position(590)
+	#pane.compute_position(1120, True, False)
+	#pane.queue_resize()
+        vbox.pack_start(pane)	
+        
+	
+        
         self.create_columns(self.treeView)
         
         self.window.add(vbox)
+        
         self.window.show_all()
+    
+    
+    def graphs(self,option):	
+	# when option==1, the first graph, self.a is redrawn
+	# when option==2, the second graph, self.c is redrawn
+      #self.f.text(0.5,0.92,'',fontsize=14)
+      #self.f.text(0.5,0.92,self.combobox.get_active_text()+' '+self.combobox2.get_active_text(),fontsize=14,horizontalalignment='center')
+      
+      #print self.get_suptitle()
+      matplotlib.rc('xtick', labelsize=11) 
+      matplotlib.rc('ytick', labelsize=11) 
+      try:
+	if option==1:
+	  
+	  self.a = self.f.add_subplot(221)
+	  self.a.patch.set_color('black')
+	  self.a.patch.set_alpha(0.05)
+	  #print self.a.get_yticks()
+	  self.a.yaxis.grid('True')
+	  self.a.set_xlabel(self.combobox.get_active_text()+' '+self.combobox2.get_active_text(),fontsize=12)
+	  self.a.set_ylabel('Daily Expense',fontsize=12)
+	  model=self.treeView.get_model()
+	  total_list=[0]
+	  counter=0 
+	  for i in model:
+	    for j in i:
+	      counter+=1
+	      if counter%7==0:
+		total_list.append(j)
+	      #print j, type(j),
+	    #print '\n' 
+	  #print range(len(total_list))
+	  #print total_list
+	  if max(total_list)==0:
+	    M=1
+	  else:
+	    M=max(total_list)+0.1*max(total_list)
+	  self.a.set_ylim(0,M)
+	  self.a.set_xlim(1,len(total_list)-1)
+	  days=[]
+	  for i in range(len(total_list)):
+	    if i%2!=0:
+	      days.append(i)
+	  self.a.set_xticks(days)
+	  self.a.set_xticklabels(days,fontsize=9)
+	  
+	  #print total_list, len(total_list)        
+	  #total_list.append(100)
+	  while len(self.line1)!=0:
+	    l=self.line1.pop(0)
+	    l.remove()
+	  total_list.append(0)
+	  #self.a.set_antialiased(False)
+	  self.line1=self.a.fill(total_list,'blue',alpha=0.6)
+	  
+	  
+        
+	  #print line
+	  #self.canvas.draw()
+	
+	  self.b=self.f.add_subplot(222)
+	  self.b.patch.set_color('black')
+	  self.b.patch.set_alpha(0.05)
+	  self.b.yaxis.grid('True')
+	  self.b.set_xlabel('Categories',fontsize=12)
+	  self.b.set_ylabel('Category Expense',fontsize=12)
+	  total_list=[0]
+	  counter=0
+	  #print 1
+	  stats.update(self.fname)
+	  counter=0
+	  cat=[]
+	  for i in stats.create_model(self):
+	    for j in i:
+	      counter+=1
+	      if counter%2==0:
+		total_list.append(j)
+	      else:
+		cat.append(j)
+	  
+	  del total_list[-1]
+	  del cat[-1]
+	  #print cat
+	  #print total_list
+	  if max(total_list)==0:
+	    M=1
+	  else:
+	    M=max(total_list)+0.1*max(total_list)
+	  self.b.set_ylim(0,M)
+	  self.b.set_xlim(0.5,5.5)
+	  self.b.set_xticks([1,2,3,4,5])
+	  self.b.set_xticklabels(cat,fontsize=9)
+	  
+	  #print total_list, len(total_list)        
+	  #total_list.append(100)
+	  
+	  
+	  while len(self.line1b)!=0:
+	    l2=self.line1b.pop(0)
+	    l2.remove()
+	  
+	  
+	  total_list.append(0)
+	  #self.a.set_antialiased(False)
+	  self.line1b=self.b.bar(range(len(total_list)),total_list,align='center',facecolor='yellow',alpha=0.5)
+	  self.canvas.draw()
+	  
+	  
+	  
+	
+	else:
+	  
+	  self.c = self.f.add_subplot(212)	
+	  self.c.patch.set_color('black')
+	  self.c.patch.set_alpha(0.05)
+	  self.c.yaxis.grid('True')
+	  self.c.set_xlabel(self.combobox2.get_active_text(),fontsize=12)
+	  self.c.set_ylabel('Monthly Expense',fontsize=12)
+	  
+	  self.c.set_xlim(-1,12)
+	  self.c.set_xticks(range(12))
+	  #self.c.set_xticks(range(5))
+	  #for i in max(monthly_totals_list):
+	    
+	  #print self.c.get_yticks()
+	  
+	  self.c.set_xticklabels(self.months,fontsize=11)
+	  year=self.combobox2.get_active_text()
+	  monthly_totals_list=[]
+	  
+	  for i in range(12):
+	    cost=0
+	    s=year+'_'+str(self.months[i])
+	    #print s
+	    try:
+	      f=open('data/'+s,'r')
+	      s=f.readlines()
+	      f.close()
+	      
+	      #print 0
+	      for i in s:
+		#print i[19:22]
+		#print i
+		cost+=float(i[19:27].strip())
+		#print cost,
+	      
+	    except IOError:
+	      #print 2
+	      pass
+	    #print cost
+	    monthly_totals_list.append(cost)
+	  #print 
+	  
+	  if max(monthly_totals_list)==0:
+	    M=1
+	  else:
+	    M=max(monthly_totals_list)+0.1*max(monthly_totals_list)
+	  self.c.set_ylim(0,M)
+	  
+	  while len(self.line2)!=0:
+	    l=self.line2.pop(0)
+	    l.remove()
+	  
+	  self.line2=self.c.bar(range(12),monthly_totals_list,align='center',facecolor='green',alpha=0.5)
+	  self.canvas.draw()
+	  
+	  ##print line
+	  #self.canvas.draw()
+	
+      except AttributeError:
+	pass
+      
+	
     
     def about(self,widget):
 	dialog = gtk.AboutDialog()
@@ -134,7 +376,7 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
         #dialog.set_website_label('http://desouradeep.wordpress.com')
         dialog.set_authors(['Souradeep De \n email: <souradeep.2011@gmail.com> \n blog: http://desouradeep.wordpress.com'])
         dialog.set_program_name('Expense-Manager')
-        dialog.set_version('0.1')
+        dialog.set_version('1.0')
         dialog.run()
         dialog.destroy()
     
@@ -155,6 +397,9 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
 	    print
 	print 2
         '''
+        self.graphs(1)
+        self.graphs(2)
+        
         
     def select_years(self):
 	#this method selects the years to be stored in the years combobox	
@@ -218,7 +463,17 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
 	  #model=self.treeView.get_model()
         except AttributeError:
 	  pass
-      
+	self.graphs(1)
+	self.graphs(2)
+	stats.update(self.fname)
+	stats.treeView.set_model(stats.create_model(self))
+	try:
+	  viewer.update(self,'')
+	  viewer.treeView.set_model(viewer.create_model(self))
+	except AttributeError:
+	  pass
+	
+	
       
     def changed_item(self,widget):
         #activated when combobox value holding months is changed
@@ -235,10 +490,12 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
 	
 	#creates a file(if not present) and opens it and reads its contents
 	#self.select_years()
+	
         try:
 	  #print type(self.combobox2.get_active_text())
           self.fname='data/'+self.combobox2.get_active_text()+'_'+a
           #print self.fname
+          
 	  f=open(self.fname,'a')
 	  f.close()
 	  f=open(self.fname,'r')
@@ -258,7 +515,19 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
         except AttributeError:
 	  pass
 	
+	#del self.line
+        self.graphs(1)
+        self.graphs(2)
         
+        try:
+	  stats.update(self.fname)
+	  stats.treeView.set_model(stats.create_model(self))
+	
+	
+	  viewer.update(self,self.fname)
+	  viewer.treeView.set_model(viewer.create_model(self))
+	except AttributeError:
+	  pass
 
         
         
@@ -315,17 +584,27 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
 	self.changed_item(self.combobox)
 	self.changed_item_years(self.combobox2)
       
-    def on_activated(self,widget, row, col):
-      #double click on the treeView
+    def on_activated(self,widget):
+      #single click on the treeView
+      
       model=widget.get_model()
+      #b= self.treeView.get_selection()
+      b=self.treeView.get_cursor()
+      row=0
+      for i in b[0]:
+	row= int(i)
+	
+     
+	
       x='data/'+str(self.combobox2.get_active_text())+'_'+ model[row][0]
       #print x
       viewer.update(self,x)
-      viewer.main(self)
+      viewer.treeView.set_model(viewer.create_model(self))
+      #print 1
     
-    def stats(self,widget):
-      stats.main(self,self.fname)
-	  
+
+   
+         
     def terminate(self,a,r):
 	clean_database.clean()
         sys.exit(0)
