@@ -1,0 +1,4 @@
+#!/bin/sh
+export PYTHONPATH=/usr/share/expensemanager
+cd /usr/share/expensemanager
+exec /usr/bin/python -tt /usr/share/expensemanager/main.py
