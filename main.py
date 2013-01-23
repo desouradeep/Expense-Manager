@@ -298,7 +298,7 @@ class app:
           self.c.set_xlabel(self.combobox2.get_active_text(),fontsize=12)
           self.c.set_ylabel('Monthly Expense',fontsize=12)
           
-          self.c.set_xlim(-1,12)
+          self.c.set_xlim(-0.5,11.5)
           self.c.set_xticks(range(12))
           #self.c.set_xticks(range(5))
           #for i in max(monthly_totals_list):
