@@ -213,13 +213,14 @@ class app:
       matplotlib.rc('ytick', labelsize=11) 
       try:
         if option==1:
-          
           self.a = self.f.add_subplot(221)
           self.a.patch.set_color('black')
           self.a.patch.set_alpha(0.05)
           #print self.a.get_yticks()
           self.a.yaxis.grid('True')
+          #print self.combobox.get_active_text()
           self.a.set_xlabel(self.combobox.get_active_text()+' '+self.combobox2.get_active_text(),fontsize=12)
+          #print self.a.get_xlabel()
           self.a.set_ylabel('Daily Expense',fontsize=12)
           model=self.treeView.get_model()
           total_list=[0]
@@ -253,13 +254,14 @@ class app:
             l.remove()
           total_list.append(0)
           #self.a.set_antialiased(False)
+          #print total_list
           self.line1=self.a.fill(total_list,'blue',alpha=0.6)
-          
+          self.canvas.draw()
           
         
           #print line
-          #self.canvas.draw()
-        
+          
+          
           self.b=self.f.add_subplot(222)
           self.b.patch.set_color('black')
           self.b.patch.set_alpha(0.05)
@@ -284,6 +286,7 @@ class app:
           del cat[-1]
           #print cat
           #print total_list
+          #print 'sfdf'
           if max(total_list)==0:
             M=1
           else:
@@ -300,11 +303,13 @@ class app:
           while len(self.line1b)!=0:
             l2=self.line1b.pop(0)
             l2.remove()
-          
-          
+            
+          #self.line1b=[]
+          #print 3
           total_list.append(0)
           #self.a.set_antialiased(False)
-          self.line1b=self.b.bar(range(len(total_list)),total_list,align='center',facecolor='yellow',alpha=0.5)
+          #print total_list
+          self.line1b=self.b.fill(total_list,'yellow',alpha=0.6)
           self.canvas.draw()
           
           
@@ -319,8 +324,8 @@ class app:
           self.c.set_xlabel(self.combobox2.get_active_text(),fontsize=12)
           self.c.set_ylabel('Monthly Expense',fontsize=12)
           
-          self.c.set_xlim(-1,12)
-          self.c.set_xticks(range(12))
+          self.c.set_xlim(0,13)
+          self.c.set_xticks(range(1,13))
           #self.c.set_xticks(range(5))
           #for i in max(monthly_totals_list):
             
@@ -328,7 +333,7 @@ class app:
           
           self.c.set_xticklabels(self.months,fontsize=11)
           year=self.combobox2.get_active_text()
-          monthly_totals_list=[]
+          monthly_totals_list=[0]
           
           for i in range(12):
             cost=0
@@ -363,11 +368,11 @@ class app:
             l=self.line2.pop(0)
             l.remove()
           
-          self.line2=self.c.bar(range(12),monthly_totals_list,align='center',facecolor='green',alpha=0.5)
+          self.line2=self.c.fill(monthly_totals_list,'green',alpha=0.6)
           self.canvas.draw()
           
           ##print line
-          #self.canvas.draw()
+        
         
       except AttributeError:
         pass

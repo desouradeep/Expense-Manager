@@ -2,7 +2,7 @@
 EXPENSE MANAGER
 ===============
 
-Expense-Manager is a free software that is meant to track your expenses and present them in a statistical way, using graphs and tables. 
+Expense-Manager is a free software, written in python, which is meant to track expenses and present them in a statistical way, using graphs and tables. It has a multiuser interface. 
 
 
 DEPENDENCIES:
