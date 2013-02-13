@@ -2,20 +2,23 @@
 EXPENSE MANAGER
 ===============
 
-An easy to use, clean looking expense manager which will help you to track your daily/monthly expenses efficiently.
+Expense-Manager is a free software that is meant to track your expenses and present them in a statistical way, using graphs and tables. 
 
 
 DEPENDENCIES:
 ---------------
 
 1. gtk
-2. datetime
-3. os
-4. sys
-5. time
-6. contextlib
+2. matplotlib
+
+INSTALLATION:
+-------------
+
+Execute the shell script, "install.sh".
+(Simply type in "bash install.sh" in the terminal)
 
 EXECUTION:
 ----------
 
-Execute main.py to launch the program.
+Enter "expensemanager" in the terminal to start the program. You will also find it in the applicatios menu.
+

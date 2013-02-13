@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import datetime
 import bugfix
+import getpass
 import sys
 import time
 import sort_file
@@ -9,6 +10,7 @@ with bugfix.suppress_output(sys.stderr):
 
     
 class newEntry:
+  data_location='/home/'+getpass.getuser()+'/.expensemanager/data/'
   def __init__(self,combobox2): 
     
     self.ini()
@@ -22,9 +24,9 @@ class newEntry:
     table=gtk.Table(3,2,True)
     
     
-    label=gtk.Label('TYPE *  		    ')
+    label=gtk.Label('TYPE *                 ')
     table.attach(label,0,1,0,1)
-    label=gtk.Label('COST *		    ')
+    label=gtk.Label('COST *                 ')
     table.attach(label,0,1,1,2)
     label=gtk.Label('DESCRIPTION   ')
     table.attach(label,0,1,2,3)
@@ -92,7 +94,7 @@ class newEntry:
     #print self.dd, "/", self.mm, "/", self.yy
     
   def verify(self, widget,entry1,entry2,combobox2):
-    #This method verifies the inputs and writes them in a file at location: 'data/' in the parent folder
+    #This method verifies the inputs and writes them in a file at location: newEntry.data_location in the parent folder
     self.e1=entry1.get_text()
     self.w=gtk.Window()
     e2=entry2.get_text()
@@ -102,27 +104,28 @@ class newEntry:
       self.e1=str(self.e1)
       l=len(self.e1)
       for i in range(l,10):
-	  self.e1=self.e1+' '
+           self.e1=self.e1+' '
       #print self.e1
       if self.dd<10:
-	d='0'+str(self.dd)
+         d='0'+str(self.dd)
       else:
-	d=str(self.dd)
+         d=str(self.dd)
       ss=months[int(self.mm)]+' '+d+'\t'+(self.cat)+self.e1+str(e2)
       #print ss     
-      fname='data/'+str(self.yy)+'_'+months[int(self.mm)]
+      fname=newEntry.data_location+str(self.yy)+'_'+months[int(self.mm)]
       f=open(fname,'a')
+      #print fname
       f.write(ss+'\n')
       f.close()
       #print fname
       
-      f=open('data/years','r')
+      f=open(newEntry.data_location+'years','r')
       yrs=f.readlines()
       f.close()
       flag=0
       for i in yrs:
-	if i[0:-1]== str(self.yy):
-	  flag=1
+         if i[0:-1]== str(self.yy):
+           flag=1
       
       self.confirmation_window=gtk.Window()
       #self.confirmation_window.set_default_size(200,100)
@@ -138,25 +141,25 @@ class newEntry:
       self.confirmation_window.show_all()
       
       if flag==0:
-	f=open('data/years','a')
-	f.write(str(self.yy)+'\n')
-	f.close()
-	sort_file.main('data/years')
-	f=open('data/years','r')
-	yrs=f.readlines()
-	for i in range(0,len(yrs)):
-	  if str(self.yy)+'\n' ==yrs[i]:
-	    break
-	combobox2.insert_text(i, str(self.yy))
-	
-	#main.app.select_years(self)
-      #s='data/2012_OCT'
+         f=open(newEntry.data_location+'years','a')
+         f.write(str(self.yy)+'\n')
+         f.close()
+         sort_file.main(newEntry.data_location+'years')
+         f=open(newEntry.data_location+'years','r')
+         yrs=f.readlines()
+         for i in range(0,len(yrs)):
+           if str(self.yy)+'\n' ==yrs[i]:
+             break
+         combobox2.insert_text(i, str(self.yy))
+         
+         #main.app.select_years(self)
+      #s='newEntry.data_location2012_OCT'
       sort_file.main(fname)
       #time.sleep(0.5)
       entry1.set_text('')
       entry2.set_text('')
 
-	
+         
     else:
       #if not valid, displays a notification window w
       self.w.set_position(gtk.WIN_POS_CENTER)

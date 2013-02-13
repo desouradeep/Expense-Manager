@@ -3,6 +3,7 @@ import update_list
 import sys
 import os
 import clean_database
+import getpass
 import newEntry
 import bugfix
 import viewer
@@ -17,10 +18,30 @@ with bugfix.suppress_output(sys.stderr):
     import gtk    
 
 class app:
-    
+    data_location=''
     def __init__(self):
+        
+        app.data_location='/home/'+getpass.getuser()+'/.expensemanager/data/'
+        dest_dir = os.path.join(app.data_location[0:-5],'data/')
+        #print dest_dir
+        try:
+          f=open(app.data_location+'years','r')
+          f.readlines()
+          f.close()
+        except :
+          #script_dir = os.path.dirname(os.path.abspath(__file__))
+          #dest_dir = os.path.join(app.data_location)        
+          #print type(dest_dir), dest_dir
+          #print 1
+          try:
+	      #print 2
+              os.makedirs(dest_dir)
+          except OSError:
+              pass 
+        
+        
         self.window=gtk.Window()
-        self.window.set_default_size(1230,658)
+        self.window.set_default_size(1220,658)
         self.window.set_position(gtk.WIN_POS_CENTER)
         self.window.connect("delete_event",self.terminate)
         self.window.set_title("Expense Manager")
@@ -29,10 +50,14 @@ class app:
         vbox = gtk.VBox(False)
         
         hbox = gtk.HBox()
-        button1 = gtk.Button("EDIT",stock=gtk.STOCK_EDIT)
+        settings=(gtk.Button()).get_settings()
+	settings.set_property("gtk-button-images",True)
+	button1 = gtk.Button(stock=gtk.STOCK_EDIT)
+
+
         button1.connect('clicked',self.edit)
         
-        button2 = gtk.Button("UPDATE",stock=gtk.STOCK_ADD)
+        button2 = gtk.Button(stock=gtk.STOCK_ADD)
         button2.connect('clicked',self.gocl)
         
         
@@ -56,24 +81,18 @@ class app:
         #self.yy='2012'
         self.combobox.set_active(self.mm)
         a= self.combobox.get_active_text()
-        self.fname='data/'+str(self.yy)+'_'+a
+        #dest_dir = os.path.join(/home/+get,getpass.getuser() 'data')        
+        self.fname=app.data_location+str(self.yy)+'_'+a
 
         
         
         
         
         try:
-          f=open('data/years','r')
+          f=open(app.data_location+'years','r')
           f.close()
         except :
-          script_dir = os.path.dirname(os.path.abspath(__file__))
-          dest_dir = os.path.join(script_dir, 'data')        
-          #print type(dest_dir), dest_dir
-          try:
-              os.makedirs(dest_dir)
-          except OSError:
-              pass 
-          f=open('data/years','w')
+          f=open(app.data_location+'years','w')
           f.write(str(self.yy)+'\n')
           f.close()
           
@@ -91,6 +110,8 @@ class app:
         vbox.pack_start(hbox, False)        #hbox contains the add/stats/edit etc buttons/comboboxes
         hbox2=gtk.HBox()
         hbox2.pack_end(button5,False)         #button5 is the about button
+        label_user=gtk.Label('    Welcome,    '+getpass.getuser().title()+'.')
+        hbox2.pack_start(label_user,False)
         vbox.pack_end(hbox2,False)        #hbox2 holds only the about button
         
         sw = gtk.ScrolledWindow()
@@ -144,7 +165,7 @@ class app:
         viewer_sw.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)     
         viewer_sw.add(viewer.treeView)
         
-        x='data/'+str(self.yy)+'_'+ str(self.months[self.mm])+' '+str(self.dd)
+        x=app.data_location+str(self.yy)+'_'+ str(self.months[self.mm])+' '+str(self.dd)
         #print x
         viewer.update(self,x)
         viewer.main(self)
@@ -201,38 +222,38 @@ class app:
           self.a.set_xlabel(self.combobox.get_active_text()+' '+self.combobox2.get_active_text(),fontsize=12)
           self.a.set_ylabel('Daily Expense',fontsize=12)
           model=self.treeView.get_model()
-          self.total_list=[0]
+          total_list=[0]
           counter=0 
           for i in model:
             for j in i:
               counter+=1
               if counter%7==0:
-                self.total_list.append(j)
+                total_list.append(j)
               #print j, type(j),
             #print '\n' 
-          #print range(len(self.total_list))
-          #print self.total_list
-          if max(self.total_list)==0:
+          #print range(len(total_list))
+          #print total_list
+          if max(total_list)==0:
             M=1
           else:
-            M=max(self.total_list)+0.1*max(self.total_list)
+            M=max(total_list)+0.1*max(total_list)
           self.a.set_ylim(0,M)
-          self.a.set_xlim(1,len(self.total_list)-1)
+          self.a.set_xlim(1,len(total_list)-1)
           days=[]
-          for i in range(len(self.total_list)):
+          for i in range(len(total_list)):
             if i%2!=0:
               days.append(i)
           self.a.set_xticks(days)
           self.a.set_xticklabels(days,fontsize=9)
           
-          #print self.total_list, len(self.total_list)        
-          #self.total_list.append(100)
+          #print total_list, len(total_list)        
+          #total_list.append(100)
           while len(self.line1)!=0:
             l=self.line1.pop(0)
             l.remove()
-          self.total_list.append(0)
+          total_list.append(0)
           #self.a.set_antialiased(False)
-          self.line1=self.a.fill(self.total_list,'blue',alpha=0.6)
+          self.line1=self.a.fill(total_list,'blue',alpha=0.6)
           
           
         
@@ -245,7 +266,7 @@ class app:
           self.b.yaxis.grid('True')
           self.b.set_xlabel('Categories',fontsize=12)
           self.b.set_ylabel('Category Expense',fontsize=12)
-          self.total_list=[]
+          total_list=[0]
           counter=0
           #print 1
           stats.update(self.fname)
@@ -255,25 +276,25 @@ class app:
             for j in i:
               counter+=1
               if counter%2==0:
-                self.total_list.append(j)
+                total_list.append(j)
               else:
                 cat.append(j)
           
-          del self.total_list[-1]
+          del total_list[-1]
           del cat[-1]
           #print cat
-          #print self.total_list
-          if max(self.total_list)==0:
+          #print total_list
+          if max(total_list)==0:
             M=1
           else:
-            M=max(self.total_list)+0.1*max(self.total_list)
+            M=max(total_list)+0.1*max(total_list)
           self.b.set_ylim(0,M)
-          self.b.set_xlim(-0.5,4.5)
-          self.b.set_xticks([0,1,2,3,4])
+          self.b.set_xlim(0.5,5.5)
+          self.b.set_xticks([1,2,3,4,5])
           self.b.set_xticklabels(cat,fontsize=9)
           
-          #print self.total_list, len(self.total_list)        
-          #self.total_list.append(100)
+          #print total_list, len(total_list)        
+          #total_list.append(100)
           
           
           while len(self.line1b)!=0:
@@ -281,9 +302,9 @@ class app:
             l2.remove()
           
           
-          self.total_list.append(0)
+          total_list.append(0)
           #self.a.set_antialiased(False)
-          self.line1b=self.b.bar(range(len(self.total_list)),self.total_list,align='center',facecolor='yellow',alpha=0.5)
+          self.line1b=self.b.bar(range(len(total_list)),total_list,align='center',facecolor='yellow',alpha=0.5)
           self.canvas.draw()
           
           
@@ -298,7 +319,7 @@ class app:
           self.c.set_xlabel(self.combobox2.get_active_text(),fontsize=12)
           self.c.set_ylabel('Monthly Expense',fontsize=12)
           
-          self.c.set_xlim(-0.5,11.5)
+          self.c.set_xlim(-1,12)
           self.c.set_xticks(range(12))
           #self.c.set_xticks(range(5))
           #for i in max(monthly_totals_list):
@@ -314,7 +335,7 @@ class app:
             s=year+'_'+str(self.months[i])
             #print s
             try:
-              f=open('data/'+s,'r')
+              f=open(app.data_location+s,'r')
               s=f.readlines()
               f.close()
               
@@ -407,13 +428,12 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
         except AttributeError:
           pass
         
-        
     def select_years(self):
         #this method selects the years to be stored in the years combobox        
         liststore2 = gtk.ListStore(str)
-        f=open('data/years','a')
+        f=open(app.data_location+'years','a')
         f.close()
-        f=open('data/years','r')
+        f=open(app.data_location+'years','r')
         yrs=f.readlines()
         f.close()
         #print 1
@@ -445,7 +465,7 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
         
     def changed_item_years(self,widget):
         #activated when combobox value holding years is changed
-        #creates a folder named data to store database in case data/ doesnt exist.
+        #creates a folder named data to store database in case /home/souradeep/data/ doesnt exist.
         script_dir = os.path.dirname(os.path.abspath(__file__))
         dest_dir = os.path.join(script_dir, 'data')        
         #print type(dest_dir), dest_dir
@@ -455,7 +475,7 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
             pass 
       
         #creates a file(if not present) and opens it and reads its contents
-        self.fname='data/'+str(widget.get_active_text())+'_'+self.combobox.get_active_text()
+        self.fname=app.data_location+str(widget.get_active_text())+'_'+self.combobox.get_active_text()
         #print self.fname
         f=open(self.fname,'a')
         f.close()
@@ -487,7 +507,7 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
         #self.yy='2012'
         a= widget.get_active_text()
         
-        #creates a folder named data to store database in case data/ doesnt exist.
+        #creates a folder named data to store database in case /home/souradeep/data/ doesnt exist.
         script_dir = os.path.dirname(os.path.abspath(__file__))
         dest_dir = os.path.join(script_dir, 'data')        
         try:
@@ -500,7 +520,7 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
         
         try:
           #print type(self.combobox2.get_active_text())
-          self.fname='data/'+self.combobox2.get_active_text()+'_'+a
+          self.fname=app.data_location+self.combobox2.get_active_text()+'_'+a
           #print self.fname
           
           f=open(self.fname,'a')
@@ -511,9 +531,9 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
         #print 1
           update_list.main(self.fname)
         except AttributeError:
-          f=open('data/'+str(self.yy)+'_'+str(self.months[self.mm]),'a')
+          f=open(app.data_location+str(self.yy)+'_'+str(self.months[self.mm]),'a')
           f.close()
-          update_list.main('data/'+str(self.yy)+'_'+self.combobox.get_active_text())
+          update_list.main(app.data_location+str(self.yy)+'_'+self.combobox.get_active_text())
           pass
         
         try:
@@ -603,7 +623,7 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
         
      
         
-      x='data/'+str(self.combobox2.get_active_text())+'_'+ model[row][0]
+      x=app.data_location+str(self.combobox2.get_active_text())+'_'+ model[row][0]
       #print x
       viewer.update(self,x)
       viewer.treeView.set_model(viewer.create_model(self))

@@ -1,0 +1,17 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Categories=Office;
+Comment[en_US]=An application to manage your expenses
+Comment=An application to manage your expenses
+Encoding=UTF-8
+Exec=expensemanager
+GenericName[en_US]=An application to manage your expenses
+GenericName=An application to manage your expenses
+Icon=expensemanager
+Name[en_US]=expense-manager
+Name=expense-manager
+StartupNotify=true
+Terminal=false
+TryExec=expensemanager
+Type=Application
+ 
