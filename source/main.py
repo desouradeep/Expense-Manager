@@ -502,17 +502,6 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
         #self.yy='2012'
         a= widget.get_active_text()
         
-        #creates a folder named data to store database in case /home/souradeep/data/ doesnt exist.
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        dest_dir = os.path.join(script_dir, 'data')        
-        try:
-            os.makedirs(dest_dir)
-        except OSError:
-            pass           
-        
-        #creates a file(if not present) and opens it and reads its contents
-        #self.select_years()
-        
         try:
           #print type(self.combobox2.get_active_text())
           self.fname=app.data_location+self.combobox2.get_active_text()+'_'+a
