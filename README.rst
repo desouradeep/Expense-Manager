@@ -32,7 +32,7 @@ There is a shell script, install.sh in the Expense-Manager directory. You just n
         ./install.sh
   
                 
-                          ------OR------
+   ------OR------
 
 2. Simply execute the shell script using,::
 
@@ -44,5 +44,5 @@ Thats it!! Expense-Manager will be successfully installed.
 RUN THE PROGRAM:
 ----------------
 
-To start the program, you can either execute the program from a terminal by executing command "*expensemanage*" OR you can also find it under the *applications > office* menu.
+To start the program, you can either execute the program from a terminal by executing command "*expensemanager*" OR you can also find it under the *applications > office* menu.
 
