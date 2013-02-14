@@ -23,7 +23,6 @@ class app:
         
         app.data_location='/home/'+getpass.getuser()+'/.expensemanager/data/'
         dest_dir = os.path.join(app.data_location[0:-5],'data/')
-        #print dest_dir
         try:
           f=open(app.data_location+'years','r')
           f.readlines()
@@ -470,18 +469,9 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
         
     def changed_item_years(self,widget):
         #activated when combobox value holding years is changed
-        #creates a folder named data to store database in case /home/souradeep/data/ doesnt exist.
-        script_dir = os.path.dirname(os.path.abspath(__file__))
-        dest_dir = os.path.join(script_dir, 'data')        
-        #print type(dest_dir), dest_dir
-        try:
-            os.makedirs(dest_dir)
-        except OSError:
-            pass 
       
         #creates a file(if not present) and opens it and reads its contents
         self.fname=app.data_location+str(widget.get_active_text())+'_'+self.combobox.get_active_text()
-        #print self.fname
         f=open(self.fname,'a')
         f.close()
         f=open(self.fname,'r')
@@ -557,6 +547,14 @@ along with Expense-Manager; if not, write to the Free Software Foundation, Inc.,
         
         
           viewer.update(self,self.fname)
+          viewer.treeView.set_model(viewer.create_model(self))
+        except AttributeError:
+          pass
+
+        
+        
+        
+      
           viewer.treeView.set_model(viewer.create_model(self))
         except AttributeError:
           pass

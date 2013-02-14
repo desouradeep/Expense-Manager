@@ -22,7 +22,6 @@ def clean():
         #print fname,len(rec)
         if len(rec)==0:
           script_dir = os.path.dirname(os.path.abspath(__file__))
-          fname=script_dir+'/'+fname
           os.remove(fname)
   
       except :
