@@ -15,8 +15,10 @@ HOW TO INSTALL THE DEPENDENCIES:
 --------------------------------
 
 Normally, gtk and matplotlib comes preinstalled on your linux distro. But you can get the latest versions here:
-1. gtk        : http://www.gtk.org/download/
-2. matplotlib : http://matplotlib.org/downloads.html
+        
+  1. gtk        :http://www.gtk.org/download/
+  2. matplotlib : http://matplotlib.org/downloads.html
+
 
 INSTALLATION:
 -------------
