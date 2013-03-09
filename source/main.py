@@ -366,7 +366,7 @@ class app:
           while len(self.line2)!=0:
             l=self.line2.pop(0)
             l.remove()
-          
+          monthly_totals_list.append(0)
           self.line2=self.c.fill(monthly_totals_list,'green',alpha=0.6)
           self.canvas.draw()
           
